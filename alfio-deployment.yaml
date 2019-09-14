@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: alfio
+  name: alfio
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alfio
+  strategy: 
+    rollingUpdate:
+     maxSurge: 25%
+     maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: alfio
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_ENV_POSTGRES_DB
+          value: alfio
+        - name: POSTGRES_ENV_POSTGRES_PASSWORD
+          value: vkKv6osvd8
+        - name: POSTGRES_ENV_POSTGRES_USERNAME
+          value: postgres
+        - name: POSTGRES_PORT_5432_TCP_ADDR
+          value: postgresql
+        - name: POSTGRES_PORT_5432_TCP_PORT
+          value: "5432"
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev,jdbc-session
+        image: alfio/alf.io
+        name: alfio
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+      restartPolicy: Always
